@@ -13,7 +13,7 @@ from optparse import OptionParser
 
 
 parser = OptionParser('Usage: %prog [options]')
-parser.add_option('-d', '--depth', type = 'int', dest = 'depth', help = 'Markov Chain depth [default=%default]', default = 0)
+parser.add_option('-d', '--depth', type = 'int', dest = 'depth', help = 'Markov Chain depth [default=%default]', default = 1)
 parser.add_option('-i', '--infile', type = 'string', dest = 'infilename', help = 'Input file with list of names', default = '')
 
 
@@ -26,28 +26,42 @@ parser.add_option('-i', '--infile', type = 'string', dest = 'infilename', help =
 
 allchars = '^abcdefghijklmnopqrstuvwxyz$'
 
-cor = {}
+if options.depth == 0:
+	#Read in names
+	cor0 = ''
+	with open(options.infilename, 'r') as infile:
+		for line in infile:
+			if line[0] != '#':
+				line = line.rstrip()+'$'
+				cor0 = cor0 + line
+	#Generate name
+	name = '^'
+	while name[-1] != '$':
+		name = name + random.choice(cor0)
 
-#Read in Library of names
-with open(options.infilename, 'r') as infile:
-	for line in infile:
-		if line[0] != '#':
-			line = '^'+line.rstrip()+'$'
-			for i,let in enumerate(line):
-				if i!=0:
-					try:
-						cor[line[i-1]] += let
-					except KeyError:
-						cor[line[i-1]] = let
+	#print name
+	print name[1:-1]
 
 
-#Generate name
-name = '^'
-while name[-1] != '$':
-		randi = random.randint( 0, len(cor[name[-1]])-1 )
-		name = name + cor[name[-1]][randi]
-
-#print name
-print name[1:-1]
+if options.depth == 1:
+	cor1 = {}
+	#Read in Library of names
+	with open(options.infilename, 'r') as infile:
+		for line in infile:
+			if line[0] != '#':
+				line = '^'+line.rstrip()+'$'
+				for i,let in enumerate(line):
+					if i!=0:
+						try:
+							cor1[line[i-1]] += let
+						except KeyError:
+							cor1[line[i-1]] = let
+	#Generate name
+	name = '^'
+	while name[-1] != '$':
+		name = name + random.choice(cor1[name[-1]])
+	
+	#print name
+	print name[1:-1]
 
 
