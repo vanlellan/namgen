@@ -27,7 +27,7 @@ if options.infilename == '':
 prevname = ''
 keepOnKeepingOn = True
 print "Enter for another name, s+Enter to save previous name, q+Enter to quit..."
-while keepOnKeepingOn:
+while keepOnKeepingOn:		#MAIN LOOP
 
 	command = raw_input()
 
@@ -48,6 +48,7 @@ while keepOnKeepingOn:
 	if command == '':
 		maxdepth = options.depth
 		cors = ['']+[{} for k in range(maxdepth)]
+
 		#Read in Library of names
 		with open(options.infilename, 'r') as infile:
 			for line in infile:
